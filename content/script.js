@@ -215,6 +215,7 @@ function use_presents() {
 	if(get_data(d, 'msg') == "your limit energy is exhausted") {
 		alert('Не более 50 в день!');
 	}
+	update_info();
 }
 
 function get_rewards() {
@@ -230,8 +231,3 @@ function get_rewards() {
 	}
 	update_info();
 }
-
-
-
-
-

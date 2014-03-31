@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="Windows-1251"?>
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
-<window xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" xmlns:html="http://www.w3.org/1999/xhtml" onload="load_window()" minwidth="500" minheight="500" id="prison-client" title="-Клиент для Тюряги от V4mpir3-">
+<window xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" xmlns:html="http://www.w3.org/1999/xhtml" onload="load_window()" minwidth="500" id="prison-client" title="-Клиент для Тюряги от V4mpir3-">
    <script type="application/x-javascript" src="chrome://prisonbot/content/script.js" />
    <!--<box style="cursor:pointer;"><image src="img/refresh.png" onclick="update_info()" /></box>-->
    <html:center style="color:blue; font-size:large;">
