@@ -1,0 +1,2 @@
+content	prisonbot	content/
+overlay	chrome://browser/content/browser.xul	chrome://prisonbot/content/overlay.xul

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<window onload="load_window()" minwidth="500" minheight="500" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" xmlns:html="http://www.w3.org/1999/xhtml" id="prison-client" title="-Клиент для Тюряги от V4mpir3-">
+<script type="application/x-javascript" src="chrome://prisonbot/content/script.js" />
+<!--<box style="cursor:pointer;"><image src="img/refresh.png" onclick="update_info()" /></box>-->
+<html:center style="color:blue; font-size:large;">Зек по кличке <box style="font-weight:bold;" id="name">-</box><image style="cursor:pointer;margin-left:3px;" src="img/edit.png" onclick="edit_name()"/></html:center>
+<box>
+<groupbox>
+<caption label="Валюта"/>
+<box><image style="margin:5px;" src="chrome://prisonbot/content/img/si.gif" tooltiptext="Сиги"/><box id="money">-</box></box>
+<box><image style="margin:5px;" src="chrome://prisonbot/content/img/ru.gif" tooltiptext="Рубли"/><box id="diamond">-</box></box>
+<box><image style="margin:5px;" src="chrome://prisonbot/content/img/sa.gif" tooltiptext="Сахар"/><box id="sugar">-</box></box>
+<box><image style="width:15px;margin:5px;" src="chrome://prisonbot/content/img/tu.gif" tooltiptext="Туалетка"/><box id="toilet_paper">-</box></box>
+<box><image style="margin:5px;" src="chrome://prisonbot/content/img/mi.gif" tooltiptext="Мыло"/><box id="soap">-</box></box>
+<box><image style="margin:5px;" src="chrome://prisonbot/content/img/sg.gif" tooltiptext="Сгущенка"/><box id="milk">-</box></box>
+<box><image style="margin:5px;" src="chrome://prisonbot/content/img/ni.gif" tooltiptext="Нычки"/><box id="collection_items">-</box></box>
+<box><image style="margin:5px;" src="chrome://prisonbot/content/img/en.gif" tooltiptext="Энергия"/><box id="energy">-</box></box>
+</groupbox>
+<groupbox>
+<caption label="Достижения"/>
+<box><image style="margin:5px;" src="chrome://prisonbot/content/img/av.gif" tooltiptext="Авторитет"/><box id="rating">-</box></box>
+<box><image style="margin:5px;" src="chrome://prisonbot/content/img/ma.gif" tooltiptext="Мастерство"/><box id="masters_love">-</box></box>
+<box><image style="margin:5px;" src="chrome://prisonbot/content/img/bi.gif" tooltiptext="Бицуха"/><box id="basePopularity">-</box></box>
+<box><image style="width:15px;margin:5px;" src="chrome://prisonbot/content/img/ta.gif" tooltiptext="Таланты"/><box id="playerTalentPoints">-</box></box>
+<box><image style="margin:5px;" src="chrome://prisonbot/content/img/bo.gif" tooltiptext="Борода"/><box id="beard">-</box></box>
+</groupbox>
+</box>
+<box><button oncommand="update_info()" label="Обновить информацию"/></box>
+<groupbox>
+<caption label="Функции" />
+<box><button oncommand="get_cigarettes()">Собрать сиги</button><button oncommand="get_rewards()" label="Собрать прибыль" /> <button id="shave_btn" label="Побриться" oncommand="shave()"/><button oncommand="get_toilet_paper()" label="Украсть туалетку" /></box><box><button oncommand="use_presents()">Подогревы</button></box>
+</groupbox>
+<box>
+<groupbox>
+<caption label="Харкнуть в баланду" />
+<box><textbox placeholder="ID жертвы" id="spit_enemyid" size="12" style="text-align:center;"/><button label="Харкнуть" onclick="spit()"/></box>
+</groupbox>
+<groupbox>
+<caption><box>Наехать</box><box style="color:red;font-style:italic;font-size:x-small;"> (50 папирос)</box></caption>
+<box><textbox placeholder="ID жертвы" id="hit_enemyid" size="12" style="text-align:center;"/><button label="Наехать" onclick="hit()"/> <textbox type="number" id="quant" size="2" max="100" min="1" value="1"/>раз</box>
+</groupbox>
+</box>
+<box style="display:none;" id="hidden"></box>
+</window>
+
+
+

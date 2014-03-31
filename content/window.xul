@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="style.css" type="text/css"?>
+<window onload="load_login_window()" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" xmlns:html="http://www.w3.org/1999/xhtml" id="prison-client" title="Необходимо войти">
+  <script type="application/x-javascript" src="chrome://prisonbot/content/script.js" />
+  <html:center><box style="color:blue;font-size:large;">Необходимо войти</box></html:center>
+  <groupbox>
+    <caption label="ID vk" />
+    <box flex="1">
+      <textbox id="vk_id" onkeyup="set_id(this.value)" size="10" style="text-align:center;" />
+    </box>
+  </groupbox>
+  <groupbox>
+   <caption label="auth_vk" />
+   <box flex="1">
+    <textbox onkeyup="set_auth(this.value)" id="vk_auth" size="40" style="text-align:center;" /> 
+   </box>
+  </groupbox>
+  <html:center><box><button oncommand="log_in()">Вход</button> <button oncommand="window.close();">Закрыть</button></box></html:center>
+</window>
