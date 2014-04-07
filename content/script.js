@@ -26,13 +26,24 @@ function prison_prefs() {
 	// Get resbot.prefs
 }
 
+function open_login_win() {
+	mainWin().openDialog( 'chrome://prisonbot/content/window.xul', 'login', 'chrome,centerscreen,alwaysRaised' );
+}
+
+function open_main_win() {
+	mainWin().openDialog( 'chrome://prisonbot/content/mainwindow.xul', 'main', 'chrome,centerscreen,alwaysRaised' );
+}
+
 function open_prison_window() {
+	if(!get_prison_char('auth_key') || !get_prison_char('vkid')) {
+		open_login_win();
+	}
 	var d = httpGet('getInfo');
 	if(d.search('<result>') != -1) {
-		mainWin().openDialog( 'chrome://prisonbot/content/window.xul', 'login', 'chrome,centerscreen,alwaysRaised' );
+		open_login_win();
 	}
 	else {
-		mainWin().openDialog( 'chrome://prisonbot/content/mainwindow.xul', 'main', 'chrome,centerscreen,alwaysRaised' );
+		open_main_win();
 	}
 }
 
@@ -73,12 +84,24 @@ function set_id(val) {
 }
 
 function httpGet(method) {
-    var xmlHttp = null;
-	var url = "http://109.234.156.251/prison/universal.php?key=" + get_prison_char('auth_key') + "&user=" + get_prison_char('vkid') + "&sig=" + sigs[rand(0,7)] + "&method=" + method;
-    xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "GET", url, false );
-    xmlHttp.send( null );
-    return xmlHttp.responseText;
+    try{
+		var xmlHttp = null;
+		var url = "http://109.234.156.251/prison/universal.php?key=" + get_prison_char('auth_key') + "&user=" + get_prison_char('vkid') + "&sig=" + sigs[rand(0,7)] + "&method=" + method;
+		xmlHttp = new XMLHttpRequest();
+		xmlHttp.open( "GET", url, false );
+		xmlHttp.send( null );
+		if(xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+			return xmlHttp.responseText;
+		}
+		if(xmlHttp.status == 500) {
+			xmlHttp = new XMLHttpRequest();
+			xmlHttp.open( "GET", url, false );
+			xmlHttp.send( null );
+		}
+	}
+	catch(err) {
+		alert(err);
+	}
 }
 
 function get_cigarettes() {
@@ -141,6 +164,26 @@ function update_info() {
 		cnt += Number(a[i].textContent);
 	}
 	$('collection_items').innerHTML = cnt;
+	
+	if(get_data(data, 'beard') == 0) {
+		$("shave_btn").disabled = true;
+	}
+	var rew_info = httpGet('getAllBuildingsRewardsInfo');
+	var m = get_data(rew_info, 'money');
+	var r = get_data(rew_info, 'rating');
+	var l = get_data(rew_info, 'love');
+	if(l == 0 && r == 0 && m == 0) {
+		$("get_rew").disabled = true;
+	}
+	$("rew_sig").textContent = m;
+	$("rew_av").textContent = r;
+	$("rew_love").textContent = l;
+	
+	set_jobs();
+}
+
+function set_fakes_pref() {
+	return;//set_prison_char('fakes',$("fakes_tb").value);
 }
 
 function edit_name() {
@@ -156,9 +199,165 @@ function shave() {
 
 function get_toilet_paper() {
 	var d = httpGet('collectToiletPaper');
-	if(get_data(d, 'msg') == "error") alert('Сегодня уже крал');
-	else alert('Ништяк. Тебе удалось украсть рулон');
+	if(get_data(d, 'msg') == "error") {
+		alert('Сегодня уже крал');
+	}
+	else {
+		alert('Ништяк. Тебе удалось украсть рулон');
+	}
 	update_info();
+}
+
+function open_fakes_win() {
+	mainWin().openDialog( 'chrome://prisonbot/content/fakewin.xul', 'fakes', 'chrome,centerscreen,alwaysRaised' );
+}
+
+function get_fakes() {
+	var v = $("fakes_tb").value;
+	if(!v.match(/[0-9]+:[a-z0-9]+/g)) {
+		alert('Фейки введены не по форме id:auth');
+		return;
+	}
+	if(v.trim() == "") {
+		alert('Поле для фейков нельзя оставлять пустым');
+		return;
+	}
+	var arr = v.match(/[0-9]+:[a-z0-9]+/g);
+	return arr;
+}
+
+function httpGet_url(url) {
+    var xmlHttp = null;
+    xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", url, false );
+    xmlHttp.send( null );
+    return xmlHttp.responseText;
+}
+
+function gym() {
+	var dif = 0;
+	var id = $("gym_id").value.trim();
+	var fakes = get_fakes();
+	$("gym_btn").disabled = true;
+	$("gym_btn").label = "Подождитe...";
+	fakes.forEach(function(fake) {
+		var fid = fake.split(":")[0];
+		var fauth = fake.split(":")[1];
+		var r = httpGet_url('http://109.234.156.251/prison/universal.php?key='
+			+ fauth
+			+ '&vote=5&model_id=1&method=voteForFriend&user='
+			+ fid
+			+ '&friend_uid=' + id
+			+ '&sig=' + sigs[rand(0,7)]
+			+ '&username=&sex=0'
+		);
+		if(get_data(r, 'code') && get_data(r, 'code') == 0) {
+			dif += 1;
+		}
+	});
+	alert('Бицуха увеличена на ' + dif);
+	$("gym_btn").disabled = false;
+	$("gym_btn").label = "Позвать в зал";
+	update_info();
+}
+
+function set_jobs() {
+	var d = httpGet('getUsersTasks');
+	$("hidden_2").innerHTML = d.replace('<?xml version="1.0" encoding="UTF-8"?>','');
+	
+	var dte = get_data(d, 'date');
+	$("date").innerHTML = dte;
+	
+	var a = document.getElementsByTagName('job');
+	for(i=0,txt="",html="";i<a.length;i++) {
+		var title = a[i].getElementsByTagName('title')[0];
+		if(title) title = title.textContent;
+		var c = a[i].getElementsByTagName('count')[0];
+		if(c) c = c.textContent;
+		var am = a[i].getElementsByTagName('amount')[0];
+		if(am) am = am.textContent;
+		var id = a[i].getElementsByTagName('id')[0];
+		if(id) id = id.textContent;
+		if(!c) c = 0;
+		if(title) {
+			var txt_add = ((c == am) ? '<vbox id="' + id + '" style="text-decoration:line-through">' + title : '<vbox id="' + id + '">' + title) + " (" + c + "/" + am + ")" + "</vbox>";
+			html += txt_add;
+		}
+	}
+	$("jobs").innerHTML = html;
+}
+
+function make_all_jobs() {
+	var a = document.getElementById('jobs').getElementsByTagName('vbox');
+	for(l=0,i=0;i<a.length;i++) {
+		if(a[i].style.textDecoration == "line-through") {
+			l += 1;
+		}
+	}
+	if(l == 5) {
+		alert('Все срочняки уже выполнены');
+		return;
+	}
+	for(arr=[],i=0;i<a.length;i++) {
+		arr.push(a[i].id);
+	}
+	arr.forEach(function(i) {
+		if($(i).style.textDecoration != "line-through" && i != 0) {
+			if(i == 1) {
+				for(i=1;i<4;i++) {
+					httpGet('sendPresent&recipients=' + i);
+				}
+			}
+			if(i == 10 || i == 7 || i == 5) {
+				get_rewards();
+			}
+			if(i == 6) {
+				for(i=0;i<2;i++) {
+					httpGet('challengeToDuel&enemy=90642330');
+				}
+			}
+			if(i == 2) {
+				httpGet('voteForFriend&sex=0&vote=2&model_id=1&friend_uid=90642330');
+			}
+		}
+	});
+	for(i=0,l=0;i<a.length;i++) {
+		if(a[i].textDecoration == "line-through") {
+			l += 1;
+		}
+	}
+	if(l < 5) {
+		alert('Выполнены не все срочняки');
+	}
+	if(l == 5) {
+		alert('Все срочняки выполнены :)');
+	}
+	update_info();
+}
+
+function send_presents() {
+	var cnt = 0;
+	var id = $("present_id").value.trim();
+	var fakes = get_fakes();
+	$("prison_btn").disabled = true;
+	$("prison_btn").label = "Подождитe...";
+	fakes.forEach(function(fake) {
+		var fid = fake.split(":")[0];
+		var fauth = fake.split(":")[1];
+		var r = httpGet_url('http://109.234.156.251/prison/universal.php?present_id=5'
+			+ '&key=' + fauth
+			+ '&method=sendPresent'
+			+ '&sig=' + sigs[rand(0,7)]
+			+ '&recipients=' + id
+			+ '&user=' + fid	
+		);
+		if(get_data(r, 'code') && get_data(r, 'code') == 0) {
+			cnt += 1;
+		}
+	});
+	$("prison_btn").disabled = false;
+	$("prison_btn").label = "Отправить";
+	alert('Отправлено ' + cnt + ' подогревoв');
 }
 
 function spit() {

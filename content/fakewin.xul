@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<window xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" xmlns:html="http://www.w3.org/1999/xhtml" onload="load_fakes_window()" id="fakes" title="Работа с фейками">
+<script type="application/x-javascript" src="script.js" />
+<html:center style="color:blue;font-size:large;">Работа с фейками</html:center>
+<groupbox>
+<caption>Поле для фейков (1 строка = 1 фейк<box style="color:red;margin-left:5px;">id:auth</box>)</caption>
+<vbox><textbox onkeypress="set_fakes_pref()" id="fakes_tb" rows="15" multiline="true"/></vbox>
+</groupbox>
+<box>
+<groupbox>
+<caption>Спортзал</caption>
+<box><textbox placeholder="ID" id="gym_id"/><button id="gym_btn" oncommand="gym()" label="Позвать в зал"/></box>
+</groupbox>
+<groupbox>
+<caption label="Подогревы"/>
+<box><textbox placeholder="ID" id="present_id"/><button id="prison_btn" oncommand="send_presents()" label="Отправить"/></box>
+</groupbox>
+</box>
+</window>

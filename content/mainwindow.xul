@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="Windows-1251"?>
+<?xml version="1.0" encoding="windows-1251"?>
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <window xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" xmlns:html="http://www.w3.org/1999/xhtml" onload="load_window()" minwidth="500" id="prison-client" title="-Клиент для Тюряги от V4mpir3-">
    <script type="application/x-javascript" src="chrome://prisonbot/content/script.js" />
-   <!--<box style="cursor:pointer;"><image src="img/refresh.png" onclick="update_info()" /></box>-->
+   <!--<box style="cursor:pointer;"><image src="chrome://prisonbot/content/img/refresh.png" onclick="update_info()" /></box>-->
    <html:center style="color:blue; font-size:large;">
       Зек по кличке
       <box style="font-weight:bold;" id="name">-</box>
@@ -67,20 +67,38 @@
             <box id="beard">-</box>
          </box>
       </groupbox>
+	  <groupbox>
+        <caption>Срочняки нa<box style="margin-left:5px;" id="date"></box></caption>
+        <vbox id="jobs"></vbox>
+      </groupbox>
    </box>
    <box>
       <button oncommand="update_info()" label="Обновить информацию" />
+	  <button oncommand="make_all_jobs()" label="Выполнить срочняки" />
    </box>
    <groupbox>
       <caption label="Функции" />
       <box>
          <button oncommand="get_cigarettes()">Собрать сиги</button>
-         <button oncommand="get_rewards()" label="Собрать прибыль" />
          <button id="shave_btn" label="Побриться" oncommand="shave()" />
          <button oncommand="get_toilet_paper()" label="Украсть туалетку" />
+         <button oncommand="use_presents()">Подогревы</button>
       </box>
       <box>
-         <button oncommand="use_presents()">Подогревы</button>
+          <box>
+            <box> <button tooltiptext="Собрать прибыль" id="get_rew" oncommand="get_rewards()">
+<box><image style="margin-right:2px;" src="chrome://prisonbot/content/img/si.gif"/><box id="rew_sig">-</box></box>
+<box style="margin-left:5px;"><image style="margin-right:2px;" src="chrome://prisonbot/content/img/av.gif"/><box id="rew_av">-</box></box>
+<box style="margin-left:5px;"><image style="margin-right:2px;" src="chrome://prisonbot/content/img/love.gif"/><box id="rew_love">-</box></box>
+</button></box>
+          </box>
+
+      </box>
+   </groupbox>
+   <groupbox>
+   <caption label="Дополнительно"/>
+      <box>
+         <button oncommand="open_fakes_win()">Фейки</button>
       </box>
    </groupbox>
    <box>
@@ -105,4 +123,5 @@
       </groupbox>
    </box>
    <box style="display:none;" id="hidden" />
+   <box style="" id="hidden_2" />
 </window>
